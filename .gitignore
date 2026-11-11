@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+
+multiscale_results/
+results/
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
