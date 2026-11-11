@@ -1,18 +1,3 @@
-"""Phat hien dac trung anh da ty le bang dao ham Gaussian.
-
-Chuong trinh cai dat chuoi xu ly duoc trinh bay trong bao cao:
-
-    anh xam -> Gaussian -> dao ham bac 1/bac 2 -> gradient/Hessian
-             -> edge, ridge va blob
-
-Vi phan Gaussian duoc tao truc tiep tu cong thuc toan hoc va tich chap
-tach bien bang OpenCV. Cac dao ham duoc chuan hoa theo ty le (scale
-normalized), vi vay ket qua tai cac gia tri sigma co the so sanh voi nhau.
-
-Vi du:
-    python gaussian_multiscale_features.py input.jpg --sigmas 1 2 3 5
-"""
-
 from __future__ import annotations
 
 import argparse
