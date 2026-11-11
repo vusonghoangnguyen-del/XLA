@@ -1,28 +1,28 @@
-# Phat hien dac trung anh da ty le bang dao ham Gaussian
+# Phát hiện đặc trưng ảnh đa tỷ lệ bằng đạo hàm Gaussian
 
-Du an cai dat bang Python cac phep phat hien dac trung anh o nhieu ty le:
+Dự án cài đặt bằng Python các phương pháp phát hiện đặc trưng ảnh ở nhiều tỷ lệ:
 
-- Lam tron Gaussian tai nhieu gia tri `sigma`.
-- Dao ham Gaussian bac mot: `Lx`, `Ly`.
-- Gradient magnitude va phat hien bien.
-- Dao ham Gaussian bac hai: `Lxx`, `Lxy`, `Lyy`.
-- Ma tran Hessian va phat hien duong go (ridge).
-- Laplacian of Gaussian va phat hien blob.
+- Làm trơn Gaussian tại nhiều giá trị `sigma`.
+- Tính đạo hàm Gaussian bậc nhất: `Lx`, `Ly`.
+- Tính độ lớn gradient và phát hiện biên.
+- Tính đạo hàm Gaussian bậc hai: `Lxx`, `Lxy`, `Lyy`.
+- Phân tích ma trận Hessian và phát hiện đường gờ (ridge).
+- Sử dụng Laplacian of Gaussian để phát hiện blob.
 
-Day la thuat toan xu ly anh co dien, **khong phai mo hinh hoc may**. Chuong
-trinh khong can train, khong co learnable weight va co the xu ly anh ngay sau
-khi cai dat thu vien.
+Đây là thuật toán xử lý ảnh cổ điển, **không phải mô hình học máy**. Chương
+trình không cần huấn luyện, không có trọng số học được và có thể xử lý ảnh
+ngay sau khi cài đặt các thư viện cần thiết.
 
-## 1. Yeu cau
+## 1. Yêu cầu hệ thống
 
-- Python 3.10 tro len.
+- Python 3.10 trở lên.
 - NumPy.
 - OpenCV.
 - Matplotlib.
 
-## 2. Cai dat tren Windows
+## 2. Cài đặt trên Windows
 
-Mo PowerShell tai thu muc du an va chay:
+Mở PowerShell tại thư mục dự án và chạy:
 
 ```powershell
 py -m venv .venv
@@ -31,14 +31,14 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Neu PowerShell chan script kich hoat moi truong, co the khong can activate va
-goi truc tiep Python trong `.venv`:
+Nếu PowerShell chặn script kích hoạt môi trường, có thể không cần kích hoạt và
+gọi trực tiếp Python trong `.venv`:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-## 3. Cai dat tren Linux/macOS
+## 3. Cài đặt trên Linux hoặc macOS
 
 ```bash
 python3 -m venv .venv
@@ -47,59 +47,59 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## 4. Chay chuong trinh
+## 4. Chạy chương trình
 
-### Cach chay co ban
-
-```powershell
-python gaussian_multiscale_features.py "duong_dan_den_anh.tif"
-```
-
-Neu chua activate `.venv` tren Windows:
+### 4.1. Chạy với cấu hình mặc định
 
 ```powershell
-.\.venv\Scripts\python.exe .\gaussian_multiscale_features.py "duong_dan_den_anh.tif"
+python gaussian_multiscale_features.py "đường_dẫn_đến_ảnh.tif"
 ```
 
-Chuong trinh ho tro cac dinh dang anh OpenCV doc duoc, vi du: PNG, JPG, BMP
-va TIFF.
+Nếu chưa kích hoạt `.venv` trên Windows:
 
-### Chon cac muc Sigma
+```powershell
+.\.venv\Scripts\python.exe .\gaussian_multiscale_features.py "đường_dẫn_đến_ảnh.tif"
+```
 
-Mac dinh chuong trinh su dung `1 2 3 5`. Co the thay doi bang:
+Chương trình hỗ trợ các định dạng ảnh OpenCV đọc được, ví dụ: PNG, JPG, JPEG,
+BMP và TIFF.
+
+### 4.2. Chọn các mức Sigma
+
+Mặc định chương trình sử dụng `1 2 3 5`. Có thể thay đổi bằng:
 
 ```powershell
 python gaussian_multiscale_features.py "input.tif" --sigmas 0.8 1.5 3 6
 ```
 
-Y nghia cua Sigma:
+Ý nghĩa của Sigma:
 
-- Sigma nho: giu nhieu chi tiet, nhung nhay voi nhieu.
-- Sigma trung binh: can bang giua chi tiet va kha nang loai nhieu.
-- Sigma lon: giu cac cau truc lon, lam mat cac chi tiet nho.
+- Sigma nhỏ: giữ nhiều chi tiết nhưng nhạy với nhiễu.
+- Sigma trung bình: cân bằng giữa chi tiết và khả năng loại nhiễu.
+- Sigma lớn: giữ các cấu trúc lớn nhưng làm mất các chi tiết nhỏ.
 
-### Chon thu muc ket qua
+### 4.3. Chọn thư mục kết quả
 
 ```powershell
 python gaussian_multiscale_features.py "input.tif" --output "results\anh_01"
 ```
 
-Neu khong truyen `--output`, ket qua duoc luu trong `multiscale_results`.
+Nếu không truyền `--output`, kết quả được lưu trong `multiscale_results`.
 
-### Dieu chinh nguong phat hien bien
+### 4.4. Điều chỉnh ngưỡng phát hiện biên
 
 ```powershell
 python gaussian_multiscale_features.py "input.tif" --edge-percentile 80
 ```
 
-`--edge-percentile` nam trong khoang 0 den 100:
+`--edge-percentile` nằm trong khoảng từ 0 đến 100:
 
-- Tang gia tri: giu lai it bien hon, chu yeu la bien manh.
-- Giam gia tri: giu nhieu bien yeu hon, nhung co the tang nhieu.
+- Tăng giá trị: chỉ giữ lại các biên mạnh.
+- Giảm giá trị: giữ thêm các biên yếu nhưng có thể làm tăng nhiễu.
 
-Gia tri mac dinh la `75`.
+Giá trị mặc định là `75`.
 
-### Chon loai ridge
+### 4.5. Chọn loại đường gờ
 
 ```powershell
 python gaussian_multiscale_features.py "input.tif" --ridge-polarity bright
@@ -107,11 +107,11 @@ python gaussian_multiscale_features.py "input.tif" --ridge-polarity dark
 python gaussian_multiscale_features.py "input.tif" --ridge-polarity both
 ```
 
-- `bright`: phat hien duong go sang tren nen toi.
-- `dark`: phat hien duong go toi tren nen sang.
-- `both`: phat hien ca hai loai.
+- `bright`: phát hiện đường gờ sáng trên nền tối.
+- `dark`: phát hiện đường gờ tối trên nền sáng.
+- `both`: phát hiện cả hai loại đường gờ.
 
-## 5. Vi du day du
+## 5. Ví dụ chạy đầy đủ
 
 ```powershell
 .\.venv\Scripts\python.exe .\gaussian_multiscale_features.py `
@@ -122,60 +122,60 @@ python gaussian_multiscale_features.py "input.tif" --ridge-polarity both
   --output ".\results\kidney"
 ```
 
-## 6. Cac file ket qua
+## 6. Các file kết quả
 
-Voi moi gia tri Sigma, chuong trinh tao cac file:
+Với mỗi giá trị Sigma, chương trình tạo các file:
 
-| Hau to file | Noi dung |
+| Hậu tố file | Nội dung |
 | --- | --- |
-| `gaussian` | Anh sau khi lam tron Gaussian |
-| `lx`, `ly` | Dao ham bac mot theo truc x va y |
-| `gradient` | Do lon gradient |
-| `edge_strength` | Gradient sau khi lam manh cuc dai cuc bo |
-| `edge_mask` | Anh bien nhi phan cuoi cung |
-| `lxx`, `lxy`, `lyy` | Cac dao ham bac hai dung de tao Hessian |
-| `ridge` | Dap ung phat hien duong go tu tri rieng Hessian |
-| `blob_log` | Dap ung blob tu Laplacian of Gaussian |
+| `gaussian` | Ảnh sau khi làm trơn Gaussian |
+| `lx`, `ly` | Đạo hàm bậc nhất theo trục x và y |
+| `gradient` | Độ lớn gradient |
+| `edge_strength` | Gradient sau bước làm mảnh đường biên |
+| `edge_mask` | Ảnh biên nhị phân cuối cùng |
+| `lxx`, `lxy`, `lyy` | Các đạo hàm bậc hai dùng để tạo Hessian |
+| `ridge` | Đáp ứng phát hiện đường gờ từ trị riêng Hessian |
+| `blob_log` | Đáp ứng blob từ Laplacian of Gaussian |
 
-Ngoai ra:
+Ngoài ra:
 
-- `original_grayscale.png`: anh xam dau vao.
-- `multiscale_summary.png`: bang tong hop de so sanh cac Sigma.
+- `original_grayscale.png`: ảnh xám đầu vào.
+- `multiscale_summary.png`: bảng tổng hợp để so sánh các Sigma.
 
-Vi du `sigma_3_edge_mask.png` la anh bien nhi phan tai `sigma = 3`.
+Ví dụ, `sigma_3_edge_mask.png` là ảnh biên nhị phân tại `sigma = 3`.
 
-## 7. Quy trinh thuat toan
+## 7. Quy trình thuật toán
 
 ```text
-Anh dau vao
-    -> Chuyen anh xam
-    -> Lap qua cac gia tri Sigma
-    -> Lam tron va tinh dao ham Gaussian
+Ảnh đầu vào
+    -> Chuyển sang ảnh xám
+    -> Lặp qua các giá trị Sigma
+    -> Làm trơn và tính đạo hàm Gaussian
     -> Gradient -> Non-Maximum Suppression -> Edge
-    -> Hessian -> Tri rieng -> Ridge
+    -> Hessian -> Trị riêng -> Ridge
     -> Laplacian of Gaussian -> Blob
-    -> Chuan hoa va luu ket qua
+    -> Chuẩn hóa và lưu kết quả
 ```
 
-Dao ham duoc chuan hoa theo ty le de ket qua tai cac Sigma co the so sanh voi
-nhau. Phep tich chap Gaussian duoc tach thanh hai phep tich chap mot chieu
-bang `cv2.sepFilter2D` de giam chi phi tinh toan.
+Đạo hàm được chuẩn hóa theo tỷ lệ để kết quả tại các Sigma có thể so sánh với
+nhau. Phép tích chập Gaussian được tách thành hai phép tích chập một chiều
+bằng `cv2.sepFilter2D` để giảm chi phí tính toán.
 
-## 8. Goi y kiem thu
+## 8. Gợi ý kiểm thử
 
-Nen chon it nhat 3 den 5 anh co dac diem khac nhau:
+Nên chọn ít nhất 3 đến 5 ảnh có đặc điểm khác nhau:
 
-- Anh co bien ro va it nhieu.
-- Anh co nhieu chi tiet nho.
-- Anh co duong/gân keo dai de kiem tra ridge.
-- Anh co blob sang hoac toi.
-- Anh co nhieu hoac do tuong phan thap.
+- Ảnh có biên rõ và ít nhiễu.
+- Ảnh có nhiều chi tiết nhỏ.
+- Ảnh có đường hoặc gân kéo dài để kiểm tra ridge.
+- Ảnh có blob sáng hoặc tối.
+- Ảnh có nhiễu hoặc độ tương phản thấp.
 
-Voi moi anh, giu cung bo Sigma de so sanh. Can kiem tra chuong trinh tao du
-file dau ra, khong loi voi kich thuoc anh khac nhau va ket qua thay doi hop ly
-khi Sigma tang.
+Với mỗi ảnh, giữ cùng một bộ Sigma để so sánh. Cần kiểm tra chương trình tạo
+đủ file đầu ra, không lỗi với các kích thước ảnh khác nhau và kết quả thay đổi
+hợp lý khi Sigma tăng.
 
-## 9. Loi thuong gap
+## 9. Lỗi thường gặp
 
 ### `ModuleNotFoundError: No module named 'cv2'`
 
@@ -183,20 +183,20 @@ khi Sigma tang.
 python -m pip install -r requirements.txt
 ```
 
-Dam bao lenh cai thu vien va lenh chay chuong trinh su dung cung mot Python.
+Đảm bảo lệnh cài thư viện và lệnh chạy chương trình sử dụng cùng một Python.
 
-### Khong tim thay anh
+### Không tìm thấy ảnh
 
-- Kiem tra lai duong dan.
-- Dat duong dan co dau cach trong cap dau nhay kep.
-- Tren Windows co the dung duong dan tuyet doi.
+- Kiểm tra lại đường dẫn.
+- Đặt đường dẫn có dấu cách trong cặp dấu nháy kép.
+- Trên Windows có thể dùng đường dẫn tuyệt đối.
 
-### Ket qua co qua nhieu hoac qua it bien
+### Kết quả có quá nhiều hoặc quá ít biên
 
-Dieu chinh `--edge-percentile`. Tang de giu bien manh, giam de giu them bien
-yeu.
+Điều chỉnh `--edge-percentile`. Tăng giá trị để giữ biên mạnh, giảm giá trị
+để giữ thêm các biên yếu.
 
-### Ridge bi nguoc mau
+### Ridge bị ngược độ sáng
 
-Thu lan luot `--ridge-polarity bright`, `dark` hoac `both` tuy vao anh.
+Thử lần lượt `--ridge-polarity bright`, `dark` hoặc `both` tùy theo ảnh.
 
