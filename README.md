@@ -175,6 +175,18 @@ Với mỗi ảnh, giữ cùng một bộ Sigma để so sánh. Cần kiểm tra
 đủ file đầu ra, không lỗi với các kích thước ảnh khác nhau và kết quả thay đổi
 hợp lý khi Sigma tăng.
 
+### Kiểm thử chức năng không cần ground truth
+
+Chạy các kiểm tra về kernel, kích thước và kiểu dữ liệu đầu ra, số tệp ảnh được lưu,
+ảnh đầu vào không hợp lệ và ảnh phẳng không tạo biên giả:
+
+```powershell
+python -m unittest -v test_smoke.py
+```
+
+Ba kiểm tra này xác nhận chương trình hoạt động đúng ở các trường hợp cơ bản. Chúng
+không thay thế việc đánh giá độ chính xác bằng dataset và ground truth.
+
 ## 9. Lỗi thường gặp
 
 ### `ModuleNotFoundError: No module named 'cv2'`

@@ -131,7 +131,9 @@ def non_maximum_suppression(
 def threshold_edges(edge_strength: np.ndarray, percentile: float) -> np.ndarray:
     """Nguong hoa dap ung bien theo phan vi cua cac gia tri duong."""
 
-    positive = edge_strength[edge_strength > 0]
+    # Anh phang van co the tao dap ung ~1e-8 do sai so float32.
+    # Voi anh dau vao da chuan hoa [0, 1], bo cac dap ung duoi 1e-6.
+    positive = edge_strength[edge_strength > 1e-6]
     if positive.size == 0:
         return np.zeros(edge_strength.shape, dtype=np.uint8)
 
